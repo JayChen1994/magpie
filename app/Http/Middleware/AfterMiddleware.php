@@ -35,7 +35,6 @@ class AfterMiddleware
                 $response->setStatusCode(Response::HTTP_OK);
             }
         }else {
-
             $data = [
                 'code' => BaseConst::SUCCESS_CODE,
                 'msg'  => BaseConst::SUCCESS_CODE_MSG,
