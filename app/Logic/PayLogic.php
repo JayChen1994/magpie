@@ -5,7 +5,7 @@ namespace App\Logic;
 use App\Models\PackageModel;
 use App\Utils\Singleton;
 
-class OrderLogic extends BaseLogic
+class PayLogic extends BaseLogic
 {
     use Singleton;
 
