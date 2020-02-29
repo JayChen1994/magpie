@@ -15,4 +15,6 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/order/get-detail', ['uses' => 'OrderController@getOrderDetail']);
+$router->group(['middleware' => 'web'], function () use ($router) {
+    $router->get('/order/get-detail', ['middleware' => 'web', 'uses' => 'OrderController@getOrderDetail']); // 订单详情
+});

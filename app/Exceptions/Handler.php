@@ -21,6 +21,8 @@ class Handler extends ExceptionHandler
         HttpException::class,
         ModelNotFoundException::class,
         ValidationException::class,
+        //自定义异常 不记录日志
+        ApiException::class,
     ];
 
     /**

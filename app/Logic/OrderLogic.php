@@ -8,8 +8,13 @@ use App\Utils\Singleton;
 class OrderLogic extends BaseLogic
 {
     use Singleton;
-    public function getDetail()
+
+    /**
+     * @return
+     */
+    public function getDetail($uri)
     {
-        return PackageModel::query()->get();
+        PackageModel::query()->get();
+        return [];
     }
 }
