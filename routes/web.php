@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return '喜鹊到家享受生活...功能开发中...';
 });
 
 $router->group(['middleware' => 'web'], function () use ($router) {
