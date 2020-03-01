@@ -25,12 +25,14 @@ class PayController extends Controller
      * @return array
      * @throws \App\Exceptions\ApiException
      */
-    public function getOrderDetail(Request $request)
+    public function toPay(Request $request)
     {
-        $uri = $request->input();
-        if (!$uri) {
+        $uri = $request->input('uri');
+        $num = $request->input('num');
+        $addressInfo = $request->input('addressInfo');
+        if (!$uri || !$num || !$addressInfo) {
             CommonUtil::throwException(ErrorConst::ERROR_PARAM_CODE, ErrorConst::ERROR_PARAM_MSG);
         }
-        return $this->payLogic->getDetail($uri);
+        return $this->payLogic->toPay($uri, $addressInfo, $num);
     }
 }

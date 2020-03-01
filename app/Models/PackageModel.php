@@ -18,4 +18,10 @@ class PackageModel extends Model
 
     const TYPE_HAS_TIME = 1; // 有使用次数的套餐
     const TYPE_NO_TIME = 2; // 没有使用次数的套餐
+
+    public function getByUri($uri)
+    {
+        return PackageModel::query()->select(self::COLUMN)
+            ->where('uri', $uri)->first();
+    }
 }

@@ -22,12 +22,12 @@ class OrderController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @return array
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
      * @throws \App\Exceptions\ApiException
      */
     public function getOrderDetail(Request $request)
     {
-        $uri = $request->input();
+        $uri = $request->input('uri');
         if (!$uri) {
             CommonUtil::throwException(ErrorConst::ERROR_PARAM_CODE, ErrorConst::ERROR_PARAM_MSG);
         }

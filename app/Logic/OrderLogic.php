@@ -15,7 +15,21 @@ class OrderLogic extends BaseLogic
      */
     public function getDetail($uri)
     {
-        return PackageModel::query()->select(['uri', 'title', 'imgUrl', 'price', 'type', 'cleanNum', 'unit'])
-            ->where('uri', $uri)->first();
+        return PackageModel::getInstance()->getByUri($uri);
+    }
+
+    public function list()
+    {
+        
+    }
+
+    public function useList()
+    {
+        
+    }
+
+    public function toUse()
+    {
+        
     }
 }
