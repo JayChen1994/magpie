@@ -17,7 +17,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['middleware' => 'web'], function () use ($router) {
     $router->get('/order/get-detail', ['uses' => 'OrderController@getOrderDetail']); // 订单详情
-    $router->any('/pay/toPay', ['uses' => 'PayController@toPay']); // 去支付
+    $router->post('/pay/toPay', ['uses' => 'PayController@toPay']); // 去支付
     $router->get('/order/list', ['uses' => 'OrderController@list']); // 订单列表
     $router->get('/order/use-list', ['uses' => 'OrderController@useList']); // 历史记录
     $router->get('/order/to-use', ['uses' => 'OrderController@toUse']); // 同使用
