@@ -15,6 +15,8 @@ $router->get('/', function () use ($router) {
     return '喜鹊到家享受生活...功能开发中...';
 });
 
+$router->get('/index', ['uses' => 'IndexController@index']);
+
 $router->group(['middleware' => 'web'], function () use ($router) {
     $router->get('/order/get-detail', ['uses' => 'OrderController@getOrderDetail']); // 订单详情
     $router->post('/pay/toPay', ['uses' => 'PayController@toPay']); // 去支付
