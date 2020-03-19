@@ -47,7 +47,7 @@ class IndexController extends Controller
         $useInfo = $this->getWebPage("https://api.weixin.qq.com/sns/userinfo?access_token=$accessToken&openid=$openId&lang=zh_CN");
         Log::info("userInfo...", $useInfo);
 
-        redirect(env('APP_URL'));
+        return redirect(env('APP_URL'));
     }
 
     private function getImgUrl($file)
