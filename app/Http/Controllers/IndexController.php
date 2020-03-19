@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PackageModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
@@ -26,6 +27,11 @@ class IndexController extends Controller
             ],
             "packages" => $packages
         ];
+    }
+
+    public function authorizeUser(Request $request)
+    {
+        Log::info("arguments", $request->all());
     }
 
     private function getImgUrl($file)
