@@ -35,6 +35,7 @@ class OrderLogic extends BaseLogic
         $packageIds = $orders->pluck('packageId')->toArray();
         $packages = PackageModel::query()->select(['imgUrl', 'id'])->where(['id' => $packageIds])->get()->keyBy('id');
         foreach ($orders as $order) {
+            $order->status = OrderModel::STATUS_DESC[$order->status];
             $order->payMoney = $order->payMoney / self::PERCENT;
             $order->imgUrl = env('APP_URL') . '/imgs/' . $packages->get($order->packageId)->imgUrl;
         }

@@ -86,7 +86,7 @@ class PayLogic extends BaseLogic
                 'uid' => $payOrder->uid,
                 'type' => $content['type'],
                 'surplusTimes' => $package->cleanNum * $payOrder->num,
-                'status' => 50,
+                'status' => OrderModel::STATUS_PAID,
                 'num' => $payOrder->num,
                 'payMoney' => $payOrder->price,
                 'addressJson' => $content['addressInfo'],
