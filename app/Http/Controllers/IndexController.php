@@ -14,7 +14,17 @@ class IndexController extends Controller
     public function index(Request $request)
     {
         $packages = PackageModel::query()
-            ->where(['pid' => 0])
+            ->where(['pid' => 0, 'type' => 0])
+            ->get()
+            ->map(function ($v) {
+                return [
+                    'title' => $v['title'],
+                    'imgUrl' => $this->getImgUrl($v['imgUrl'])
+                ];
+            });
+
+        $service = PackageModel::query()
+            ->where(['pid' => 0, 'type' => 3])
             ->get()
             ->map(function ($v) {
                 return [
@@ -28,7 +38,8 @@ class IndexController extends Controller
                 $this->getImgUrl("banner-1.jpg"),
                 $this->getImgUrl("banner-2.jpg"),
             ],
-            "packages" => $packages
+            "packages" => $packages,
+            "service" => $service
         ];
     }
 
