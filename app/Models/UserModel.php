@@ -11,4 +11,6 @@ class UserModel extends Model
     protected $table = 'user';
 
     public $connection = 'magpie';
+
+    public $timestamps = false;
 }
