@@ -14,14 +14,16 @@ class PackageModel extends Model
 
     public $connection = 'magpie';
 
-    const COLUMN = ['id', 'uri', 'pid', 'title', 'imgUrl', 'price', 'type', 'cleanNum', 'content'];
+    const COLUMN = ['id', 'uri', 'pid', 'title', 'imgUrl', 'price', 'type', 'cleanNum', 'content', 'unit'];
 
     const TYPE_HAS_TIME = 1; // 有使用次数的套餐
-    const TYPE_NO_TIME = 2; // 没有使用次数的套餐
+    const TYPE_NO_TIME = 0; // 没有使用次数的套餐
 
     public function getByUri($uri)
     {
-        return PackageModel::query()->select(self::COLUMN)
+        $package = PackageModel::query()->select(self::COLUMN)
             ->where('uri', $uri)->first();
+        $package->imgUrl = env('APP_URL') . '/imgs/' . $package->imgUrl;
+        return $package;
     }
 }
