@@ -11,6 +11,7 @@ use App\Utils\Singleton;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Yansongda\LaravelPay\Facades\Pay;
+use Yansongda\Pay\Log;
 
 class PayLogic extends BaseLogic
 {
@@ -55,6 +56,7 @@ class PayLogic extends BaseLogic
             'createTime' => $nowTime
         ]);
         $result = Pay::wechat()->mp($order);
+        Log::info('返回值', $result);
         // 返回信息给前台 ，前台调起来微信支付
         return  [
             'timeStamp' => $result->timeStamp,
@@ -80,13 +82,22 @@ class PayLogic extends BaseLogic
             $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'type', 'num'])->where($payOrderNo)->first();
             $content = json_decode($payOrder->contentJson, true);
             $packageId = $content['packageId'];
+            $type = $content['type'];
             $package = PackageModel::query()->where(['id' => $packageId])->first();
+            // 拼团的
+            if ($type == 2) {
+                try {
+                    PackageModel::query()->where(['type' => $type])->decrement('personLimit', 1);
+                } catch (Exception $e) {
+                    CommonUtil::throwException(100, '此次参团已结束');
+                }
+            }
             // 更新支付状态
             OrderModel::query()->insert([
                 'uri' => CommonUtil::createUri(),
                 'packageId' => $packageId,
                 'uid' => $payOrder->uid,
-                'type' => $content['type'],
+                'type' => $type,
                 'surplusTimes' => $package->cleanNum * $payOrder->num,
                 'status' => OrderModel::STATUS_PAID,
                 'num' => $payOrder->num,

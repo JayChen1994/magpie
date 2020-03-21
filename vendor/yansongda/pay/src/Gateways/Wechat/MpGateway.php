@@ -3,6 +3,7 @@
 namespace Yansongda\Pay\Gateways\Wechat;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Yansongda\Pay\Events;
 use Yansongda\Pay\Exceptions\GatewayException;
 use Yansongda\Pay\Exceptions\InvalidArgumentException;
@@ -41,6 +42,7 @@ class MpGateway extends Gateway
             'signType' => 'MD5',
         ];
         $pay_request['paySign'] = Support::generateSign($pay_request);
+        Log::info('参数', $pay_request);
 
         Events::dispatch(new Events\PayStarted('Wechat', 'JSAPI', $endpoint, $pay_request));
 
