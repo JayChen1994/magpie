@@ -41,6 +41,8 @@ class IndexController extends Controller
 
         $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$user->accessToken}&type=jsapi");
 
+        Log::info('get js package...', $ret);
+
         $jsapiTicket = $ret['ticket'];
 
         // 注意 URL 一定要动态获取，不能 hardcode.
@@ -56,10 +58,10 @@ class IndexController extends Controller
         $signature = sha1($string);
 
         $signPackage = array(
-            "appId"     => env('WX_APPID'),
-            "nonceStr"  => $nonceStr,
+            "appId" => env('WX_APPID'),
+            "nonceStr" => $nonceStr,
             "timestamp" => $timestamp,
-            "url"       => $url,
+            "url" => $url,
             "signature" => $signature,
             "rawString" => $string
         );
@@ -141,7 +143,8 @@ class IndexController extends Controller
         return json_decode($content, true);
     }
 
-    private function createNonceStr($length = 16) {
+    private function createNonceStr($length = 16)
+    {
         $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         $str = "";
         for ($i = 0; $i < $length; $i++) {
