@@ -15,4 +15,10 @@ class OrderModel extends Model
     public $connection = 'magpie';
 
     public $timestamps =false;
+
+    const STATUS_PAID = 10;
+
+    const STATUS_DESC = [
+        self::STATUS_PAID => '订单已支付'
+    ];
 }
