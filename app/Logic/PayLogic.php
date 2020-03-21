@@ -77,12 +77,15 @@ class PayLogic extends BaseLogic
             $payOrderNo = $data->out_trade_no;
             $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'type', 'num'])->where($payOrderNo)->first();
             $content = json_decode($payOrder->contentJson, true);
+            $packageId = $content['packageId'];
+            $package = PackageModel::query()->where(['id' => $packageId])->first();
             // 更新支付状态
             OrderModel::query()->insert([
                 'uri' => CommonUtil::createUri(),
-                'packageId' => $content['packageId'],
+                'packageId' => $packageId,
                 'uid' => $payOrder->uid,
                 'type' => $content['type'],
+                'surplusTimes' => $package->cleanNum * $payOrder->num,
                 'status' => 50,
                 'num' => $payOrder->num,
                 'payMoney' => $payOrder->price,

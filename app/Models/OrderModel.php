@@ -10,7 +10,9 @@ class OrderModel extends Model
 {
     use Singleton;
 
-    protected $table = 'pre_order';
+    protected $table = 'order';
 
     public $connection = 'magpie';
+
+    public $timestamps =false;
 }

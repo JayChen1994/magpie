@@ -33,4 +33,41 @@ class OrderController extends Controller
         }
         return $this->orderLogic->getDetail($uri);
     }
+
+    public function list()
+    {
+        return $this->orderLogic->list();
+    }
+
+    /**
+     * 去使用
+     * @param \Illuminate\Http\Request $request
+     * @return int
+     * @throws \App\Exceptions\ApiException
+     */
+    public function toUse(Request $request)
+    {
+        $orderId = $request->input('orderId');
+        if (!$orderId) {
+            CommonUtil::throwException(ErrorConst::ERROR_PARAM_CODE, ErrorConst::ERROR_PARAM_MSG);
+        }
+        return $this->orderLogic->toUse($orderId);
+    }
+
+    /**
+     * 使用历史记录
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @throws \App\Exceptions\ApiException
+     */
+    public function useList(Request $request)
+    {
+        $orderId = $request->input('orderId');
+        if (!$orderId) {
+            CommonUtil::throwException(ErrorConst::ERROR_PARAM_CODE, ErrorConst::ERROR_PARAM_MSG);
+        }
+        return $this->orderLogic->useList($orderId);
+    }
+
+
 }
