@@ -11,7 +11,6 @@ use App\Utils\Singleton;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Yansongda\LaravelPay\Facades\Pay;
-use Yansongda\Pay\Log;
 
 class PayLogic extends BaseLogic
 {
@@ -56,7 +55,6 @@ class PayLogic extends BaseLogic
             'createTime' => $nowTime
         ]);
         $result = Pay::wechat()->mp($order);
-        Log::info('返回值', $result);
         // 返回信息给前台 ，前台调起来微信支付
         return  [
             'timeStamp' => $result->timeStamp,
@@ -89,7 +87,7 @@ class PayLogic extends BaseLogic
                 try {
                     PackageModel::query()->where(['type' => $type])->decrement('personLimit', 1);
                 } catch (Exception $e) {
-                    CommonUtil::throwException(100, '此次参团已结束');
+                    CommonUtil::throwException(100, '此次参团已');
                 }
             }
             // 更新支付状态
