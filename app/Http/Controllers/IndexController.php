@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PackageModel;
+use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -46,6 +47,19 @@ class IndexController extends Controller
 
         $useInfo = $this->getWebPage("https://api.weixin.qq.com/sns/userinfo?access_token=$accessToken&openid=$openId&lang=zh_CN");
         Log::info("userInfo...", $useInfo);
+
+        $user = UserModel::query()->where('openid', '=', $useInfo['openid'])->get()->first();
+        if (!empty($user)) {
+            $user->nickname = $useInfo['nickname'];
+            $user->headimgurl = $useInfo['headimgurl'];
+            $user->save();
+        } else {
+            UserModel::query()->insert([
+                'openid' => $useInfo['openid'],
+                'nickname' => $useInfo['nickname'],
+                'headimgurl' => $useInfo['headimgurl']
+            ]);
+        }
 
         return redirect(env('APP_URL'));
     }
