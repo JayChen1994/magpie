@@ -15,9 +15,9 @@ $router->get('/', function () use ($router) {
     return '喜鹊到家享受生活...功能开发中...';
 });
 
-$router->get('/index', ['uses' => 'IndexController@index']);
+$router->get('/api/index', ['uses' => 'IndexController@index']);
 
-$router->get('/package', ['uses' => 'IndexController@packages']);
+$router->get('/api/packages', ['uses' => 'IndexController@packages']);
 
 $router->get('/api/user/authorize', ['uses' => 'IndexController@authorizeUser']);
 

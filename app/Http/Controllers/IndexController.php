@@ -38,7 +38,11 @@ class IndexController extends Controller
             ->where(['pid' => 0, 'type' => 0])
             ->get()
             ->map(function ($v) {
-                $v['sub'] = PackageModel::query()->where(['pid' => $v['id']])->get();
+                $v['imgUrl'] = $this->getImgUrl($v['imgUrl']);
+                $v['sub'] = PackageModel::query()->where(['pid' => $v['id']])->get()->map(function ($v) {
+                    $v['imgUrl'] = $this->getImgUrl($v['imgUrl']);
+                    return $v;
+                });
                 return $v;
             });
     }
