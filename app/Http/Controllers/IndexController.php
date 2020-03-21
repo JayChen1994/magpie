@@ -52,12 +52,14 @@ class IndexController extends Controller
         if (!empty($user)) {
             $user->nickname = $useInfo['nickname'];
             $user->headimgurl = $useInfo['headimgurl'];
+            $user->access_token = $accessToken;
             $user->save();
         } else {
             UserModel::query()->insert([
                 'openid' => $useInfo['openid'],
                 'nickname' => $useInfo['nickname'],
-                'headimgurl' => $useInfo['headimgurl']
+                'headimgurl' => $useInfo['headimgurl'],
+                'access_token' => $accessToken,
             ]);
         }
 
