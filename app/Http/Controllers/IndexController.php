@@ -34,11 +34,6 @@ class IndexController extends Controller
 
     public function getJsPackage(Request $request)
     {
-        $user = Auth::user();
-        if (empty($user)) {
-            return response('Unauthorized.', 401);
-        }
-
         $appId = env('WX_APPID');
         $appSecret = env('WX_SECRET');
 
@@ -46,7 +41,7 @@ class IndexController extends Controller
 
         Log::info('get js access_token...', $ret);
 
-        $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$user->accessToken}&type=jsapi");
+        $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$ret['accessToken']}&type=jsapi");
 
         Log::info('get js package...', $ret);
 
