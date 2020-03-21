@@ -39,7 +39,7 @@ class IndexController extends Controller
             return response('Unauthorized.', 401);
         }
 
-        return $user->accessToken;
+        return ['access_token' => $user->accessToken];
     }
 
     public function authorizeUser(Request $request)
