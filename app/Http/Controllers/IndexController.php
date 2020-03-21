@@ -32,6 +32,16 @@ class IndexController extends Controller
         ];
     }
 
+    public function packages(Request $request)
+    {
+        return PackageModel::query()
+            ->where(['pid' => 0, 'type' => 0])
+            ->get()
+            ->map(function ($v) {
+                $v['sub'] = PackageModel::query()->where(['pid' => $v['id']])->get();
+            });
+    }
+
     public function isLogin(Request $request)
     {
         $user = Auth::user();
