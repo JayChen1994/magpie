@@ -78,7 +78,7 @@ class PayLogic extends BaseLogic
                 return '';
             }
             $payOrderNo = $data->out_trade_no;
-            $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'type', 'num'])->where(['outTradeNo' => $payOrderNo])->first();
+            $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'num'])->where(['outTradeNo' => $payOrderNo])->first();
             $content = json_decode($payOrder->contentJson, true);
             $packageId = $content['packageId'];
             $type = $content['type'];
