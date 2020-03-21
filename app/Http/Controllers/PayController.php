@@ -35,4 +35,9 @@ class PayController extends Controller
         }
         return $this->payLogic->toPay($uri, $addressInfo, $num);
     }
+
+    public function notify()
+    {
+        return $this->payLogic->notify();
+    }
 }
