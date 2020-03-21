@@ -10,6 +10,7 @@ use App\Utils\CommonUtil;
 use App\Utils\Singleton;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Yansongda\LaravelPay\Facades\Pay;
 
 class PayLogic extends BaseLogic
@@ -77,7 +78,7 @@ class PayLogic extends BaseLogic
                 return '';
             }
             $payOrderNo = $data->out_trade_no;
-            $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'type', 'num'])->where($payOrderNo)->first();
+            $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'num'])->where(['outTradeNo' => $payOrderNo])->first();
             $content = json_decode($payOrder->contentJson, true);
             $packageId = $content['packageId'];
             $type = $content['type'];
@@ -106,7 +107,7 @@ class PayLogic extends BaseLogic
                 'createTime' => $nowTime
             ]);
         } catch (Exception $exception) {
-
+            Log::info($exception->getCode() . $exception->getTraceAsString());
         }
         return $pay->success();
     }
