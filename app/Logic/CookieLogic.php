@@ -30,7 +30,7 @@ class CookieLogic
      */
     public static function get($name)
     {
-        return $_COOKIE[$name];
+        return $_COOKIE[$name] ?? '';
     }
 
     /**
