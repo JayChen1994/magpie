@@ -41,7 +41,7 @@ class IndexController extends Controller
 
         Log::info('get js access_token...', $ret);
 
-        $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$ret['accessToken']}&type=jsapi");
+        $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$ret['access_token']}&type=jsapi");
 
         Log::info('get js package...', $ret);
 
