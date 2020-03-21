@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Logic\CookieLogic;
 use App\Models\PackageModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
@@ -28,6 +30,16 @@ class IndexController extends Controller
             ],
             "packages" => $packages
         ];
+    }
+
+    public function getAccessToken(Request $request)
+    {
+        $user = Auth::user();
+        if (empty($user)) {
+            return response('Unauthorized.', 401);
+        }
+
+        return $user->accessToken;
     }
 
     public function authorizeUser(Request $request)
@@ -62,6 +74,14 @@ class IndexController extends Controller
                 'access_token' => $accessToken,
             ]);
         }
+
+        CookieLogic::set([
+            'name' => 'magpieuc',
+            'value' => $accessToken,
+            'expire' => time() + 3600,
+            'path' => '/',
+            'domain' => env('COOKIE_DOMAIN'),
+        ]);
 
         return redirect(env('APP_URL'));
     }
