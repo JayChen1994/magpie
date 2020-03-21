@@ -101,7 +101,7 @@ class PayLogic extends BaseLogic
                 'status' => OrderModel::STATUS_PAID,
                 'num' => $payOrder->num,
                 'payMoney' => $payOrder->price,
-                'addressJson' => $content['addressInfo'],
+                'addressJson' => json_encode($content['addressInfo']),
                 'payOrderNo' => $payOrderNo,
                 'paidTime' => $nowTime,
                 'createTime' => $nowTime
