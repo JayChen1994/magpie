@@ -41,7 +41,6 @@ class PayLogic extends BaseLogic
             'payMoney' => $payMoney,
             'num' => $num,
             'status' => 0, // 1成功
-            'contentJson' => $contentJson,
             'createTime' => $nowTime
         ]);
         PayOrderModel::query()->insert([
@@ -52,6 +51,7 @@ class PayLogic extends BaseLogic
             'num' => $num,
             'price' => $payMoney,
             'paidTime' => 0,
+            'contentJson' => $contentJson,
             'createTime' => $nowTime
         ]);
         $result = Pay::wechat()->mp($order);
