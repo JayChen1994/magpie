@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
-use App\User;
-use Illuminate\Support\Facades\Gate;
+use App\Logic\CookieLogic;
+use App\Models\UserModel;
+use Illuminate\Auth\GenericUser;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -31,9 +32,16 @@ class AuthServiceProvider extends ServiceProvider
         // the User instance via an API token or any other method necessary.
 
         $this->app['auth']->viaRequest('api', function ($request) {
-            if ($request->input('api_token')) {
-                return User::where('api_token', $request->input('api_token'))->first();
+            $accessToken = CookieLogic::get('magpieuc');
+            if (empty($accessToken)) {
+                return null;
             }
+
+            $user = UserModel::query()->where('access_token', '=', '31_JhG6ztFWC06lV_S1NgKVK4n8zJKQoUmisZZTGw0xJx2Q0wc2sPXegOR6-HSQvGuo0fulYlwOeDCn8zw6P-YsZZfibH3QvjLygipzbdYOos8')->get()->first();
+            if (empty($user)) {
+                return null;
+            }
+            return new GenericUser(['id' => 1, 'openid' => $user['openid'], 'accessToken' => $accessToken]);
         });
     }
 }

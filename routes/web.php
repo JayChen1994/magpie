@@ -12,8 +12,14 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return '喜鹊到家享受生活...功能开发中...';
 });
+
+$router->get('/index', ['uses' => 'IndexController@index']);
+
+$router->get('/api/user/authorize', ['uses' => 'IndexController@authorizeUser']);
+
+$router->get('/api/user/accesstoken', [['middleware' => 'auth'], 'uses' => 'IndexController@getAccessToken']);
 
 $router->group(['middleware' => 'web'], function () use ($router) {
     $router->get('/order/get-detail', ['uses' => 'OrderController@getOrderDetail']); // 订单详情
