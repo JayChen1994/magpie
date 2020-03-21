@@ -39,6 +39,7 @@ class IndexController extends Controller
             ->get()
             ->map(function ($v) {
                 $v['sub'] = PackageModel::query()->where(['pid' => $v['id']])->get();
+                return $v;
             });
     }
 
