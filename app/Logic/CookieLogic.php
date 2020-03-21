@@ -30,7 +30,7 @@ class CookieLogic
      */
     public static function get($name)
     {
-        return isset($_COOKIE[$name]) ? Crypt::decrypt($_COOKIE[$name]) : null;
+        return $_COOKIE[$name];
     }
 
     /**
@@ -42,7 +42,7 @@ class CookieLogic
     public static function set($args)
     {
         $name = $args['name'];
-        $value = Crypt::encrypt($args['value']);
+        $value = $args['value'];
         $expire = isset($args['expire']) ? $args['expire'] : null;
         $path = isset($args['path']) ? $args['path'] : '/';
         $domain = isset($args['domain']) ? $args['domain'] : null;
