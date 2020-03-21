@@ -58,13 +58,44 @@ class IndexController extends Controller
             });
     }
 
+    public function addPackage(Request $request)
+    {
+        $user = Auth::user();
+        if (empty($user) || $this->isAdmin($user->openid)) {
+            return response('Unauthorized.', 401);
+        }
+
+        $price = $request->input('price');  //分
+        $cleanNum = $request->input('cleanNum');
+        $personLimit = $request->input('personLimit');  //购买人数
+
+        $uri = 'package_sp_' . uniqid();
+
+        PackageModel::query()->insert([
+            'title' => '服务精选',
+            'uri' => $uri,
+            'pid' => 0,
+            'imgUrl' => 'cat0.jpg',
+            'price' => $price,
+            'cleanNum' => $cleanNum,
+            'type' => 2,
+            'unit' => '次',
+            'personLimit' => $personLimit
+        ]);
+
+        return ['uri' => $uri];
+    }
+
     public function isLogin(Request $request)
     {
         $user = Auth::user();
         if (empty($user)) {
             return ['isLogin' => false];
         }
-        return ['isLogin' => true];
+        return [
+            'isLogin' => true,
+            'isAdmin' => $this->isAdmin($user->openid)
+        ];
     }
 
     public function getJsPackage(Request $request)
@@ -189,5 +220,11 @@ class IndexController extends Controller
             $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
         }
         return $str;
+    }
+
+    private function isAdmin($openid)
+    {
+        return in_array($openid,
+            ['o0d-m1TapYbRr8DIRGZhXMqDnLsI', 'o0d-m1cW-XhlpFheKNnMqomUI1c0', 'o0d-m1bcGPXLju7oLRjwnLyRi0FQ']);
     }
 }

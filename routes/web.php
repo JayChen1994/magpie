@@ -19,6 +19,8 @@ $router->get('/api/index', ['uses' => 'IndexController@index']);
 
 $router->get('/api/packages', ['uses' => 'IndexController@packages']);
 
+$router->get('/api/addpackage', [['middleware' => 'auth'], 'uses' => 'IndexController@addPackage']);
+
 $router->get('/api/user/authorize', ['uses' => 'IndexController@authorizeUser']);
 
 $router->get('/api/user/jspackage', [['middleware' => 'auth'], 'uses' => 'IndexController@getJsPackage']);
