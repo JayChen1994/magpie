@@ -37,7 +37,7 @@ class AuthServiceProvider extends ServiceProvider
                 return null;
             }
 
-            $user = UserModel::query()->where('access_token', '=', '31_JhG6ztFWC06lV_S1NgKVK4n8zJKQoUmisZZTGw0xJx2Q0wc2sPXegOR6-HSQvGuo0fulYlwOeDCn8zw6P-YsZZfibH3QvjLygipzbdYOos8')->get()->first();
+            $user = UserModel::query()->where('access_token', '=', $accessToken)->get()->first();
             if (empty($user)) {
                 return null;
             }
