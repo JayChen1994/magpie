@@ -39,7 +39,7 @@ class IndexController extends Controller
             return response('Unauthorized.', 401);
         }
 
-        Log::info('get js package...access_token', $user->accessToken);
+        Log::info('get js package...access_token', ['accessToken' => $user->accessToken]);
 
         $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$user->accessToken}&type=jsapi");
 
