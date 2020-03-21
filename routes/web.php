@@ -21,6 +21,8 @@ $router->get('/api/user/authorize', ['uses' => 'IndexController@authorizeUser'])
 
 $router->get('/api/user/jspackage', [['middleware' => 'auth'], 'uses' => 'IndexController@getJsPackage']);
 
+$router->get('/api/user/islogin', [['middleware' => 'auth'], 'uses' => 'IndexController@isLogin']);
+
 $router->group(['middleware' => ['web', 'auth']], function () use ($router) {
     $router->get('/order/get-detail', ['uses' => 'OrderController@getOrderDetail']); // 订单详情
     $router->post('/pay/toPay', ['uses' => 'PayController@toPay']); // 去支付

@@ -32,6 +32,15 @@ class IndexController extends Controller
         ];
     }
 
+    public function isLogin(Request $request)
+    {
+        $user = Auth::user();
+        if (empty($user)) {
+            return ['isLogin' => false];
+        }
+        return ['isLogin' => true];
+    }
+
     public function getJsPackage(Request $request)
     {
         $appId = env('WX_APPID');
