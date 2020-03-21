@@ -13,6 +13,7 @@ class OrderLogic extends BaseLogic
 {
     use Singleton;
 
+    const PERCENT = 100;
     /**
      * @param $uri
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
@@ -25,14 +26,22 @@ class OrderLogic extends BaseLogic
     public function list()
     {
         $uid = 1;
+        $userInfo = [
+            'headImg' => '',
+            'nickName' => 'hahha'
+        ];
         $orders = OrderModel::query()->select(['id', 'uri', 'status', 'createTime', 'payMoney', 'surplusTimes', 'type', 'packageId'])
             ->where(['uid' => $uid])->get();
         $packageIds = $orders->pluck('packageId')->toArray();
         $packages = PackageModel::query()->select(['imgUrl', 'id'])->where(['id' => $packageIds])->get()->keyBy('id');
         foreach ($orders as $order) {
+            $order->payMoney = $order->payMoney / self::PERCENT;
             $order->imgUrl = env('APP_URL') . '/imgs/' . $packages->get($order->packageId)->imgUrl;
         }
-        return $orders;
+        return [
+            'list' => $orders,
+            'userInfo' => $userInfo
+        ];
     }
 
     public function useList($orderId)
@@ -60,5 +69,26 @@ class OrderLogic extends BaseLogic
             CommonUtil::throwException(100, '已经没有剩余的次数了');
         }
         return $ret;
+    }
+
+    public function adminUseLog()
+    {
+        $uid = 1;
+        if (!in_array($uid, [1])) {
+            CommonUtil::throwException(100, '你没有该权限');
+        }
+        $logs = UseLogModel::query()->where('createTime', '>=' , strtotime(date('Y-m-d', strtotime('-7 days'))))
+            ->get();
+        $orderIds = $logs->pluck('orderId')->toArray();
+        $orders = OrderModel::query()->where(['id' => $orderIds])->select(['id', 'addressJson'])->get();
+        $orderKeyBy = $orders->keyBy('id');
+        $data = [];
+        foreach ($logs as $log) {
+            $data[] = [
+                'applyTime' => $log->createTime,
+                'addressInfo' => json_decode($orderKeyBy->get($log->orderId)->addressJson, true),
+            ];
+        }
+        return $data;
     }
 }

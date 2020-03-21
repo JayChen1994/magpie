@@ -14,7 +14,7 @@ class PackageModel extends Model
 
     public $connection = 'magpie';
 
-    const COLUMN = ['id', 'uri', 'pid', 'title', 'imgUrl', 'price', 'type', 'cleanNum', 'content', 'unit'];
+    const COLUMN = ['id', 'uri', 'pid', 'title', 'imgUrl', 'price', 'type', 'cleanNum', 'content', 'unit', 'detailImgs'];
 
     const TYPE_HAS_TIME = 1; // 有使用次数的套餐
     const TYPE_NO_TIME = 0; // 没有使用次数的套餐
@@ -24,6 +24,10 @@ class PackageModel extends Model
         $package = PackageModel::query()->select(self::COLUMN)
             ->where('uri', $uri)->first();
         $package->imgUrl = env('APP_URL') . '/imgs/' . $package->imgUrl;
+        $package->detailImgs = array_map(function ($img) {
+            return env('APP_URL') . '/imgs/' . $img;
+        }, json_decode($package->detailImgs, true));
+        $package->price = $package->price / 100;
         return $package;
     }
 }
