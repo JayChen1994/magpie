@@ -120,7 +120,7 @@ class IndexController extends Controller
             'domain' => env('COOKIE_DOMAIN'),
         ]);
 
-        return redirect(env('APP_URL'));
+        return redirect($state);
     }
 
     private function getImgUrl($file)
