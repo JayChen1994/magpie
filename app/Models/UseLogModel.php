@@ -13,4 +13,5 @@ class UseLogModel extends Model
     protected $table = 'use_log';
 
     public $connection = 'magpie';
+
 }

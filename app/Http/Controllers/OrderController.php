@@ -69,5 +69,8 @@ class OrderController extends Controller
         return $this->orderLogic->useList($orderId);
     }
 
-
+    public function adminUseLog()
+    {
+        return $this->orderLogic->adminUseLog();
+    }
 }
