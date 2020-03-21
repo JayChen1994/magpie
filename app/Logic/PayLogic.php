@@ -9,6 +9,7 @@ use App\Models\PreOrderModel;
 use App\Utils\CommonUtil;
 use App\Utils\Singleton;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Yansongda\LaravelPay\Facades\Pay;
 
 class PayLogic extends BaseLogic
@@ -18,8 +19,9 @@ class PayLogic extends BaseLogic
 
     public function toPay($uri, $addressInfo, $num)
     {
-        $uid = 1;
-        $openid = '';
+        $user = Auth::user();
+        $openid = $user->openid;
+        $uid = $user->id;
         $package = PackageModel::getInstance()->getByUri($uri);
         $price = $package->price;
         $payMoney = $price * $num * self::CENT;

@@ -8,6 +8,7 @@ use App\Models\UseLogModel;
 use App\Utils\CommonUtil;
 use App\Utils\Singleton;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class OrderLogic extends BaseLogic
 {
@@ -25,10 +26,11 @@ class OrderLogic extends BaseLogic
 
     public function list()
     {
-        $uid = 1;
+        $user = Auth::user();
+        $uid = $user->id;
         $userInfo = [
-            'headImg' => '',
-            'nickName' => 'hahha'
+            'headImg' => $user->headImg,
+            'nickName' => $user->nickName
         ];
         $orders = OrderModel::query()->select(['id', 'uri', 'status', 'createTime', 'payMoney', 'surplusTimes', 'type', 'packageId'])
             ->where(['uid' => $uid])->get();
@@ -56,7 +58,8 @@ class OrderLogic extends BaseLogic
 
     public function toUse($orderId)
     {
-        $uid = 1;
+        $user = Auth::user();
+        $uid = $user->id;
         $ret = 0;
         $nowTime = time();
         try {
@@ -74,7 +77,8 @@ class OrderLogic extends BaseLogic
 
     public function adminUseLog()
     {
-        $uid = 1;
+        $user = Auth::user();
+        $uid = $user->id;
         if (!in_array($uid, [1])) {
             CommonUtil::throwException(100, '你没有该权限');
         }

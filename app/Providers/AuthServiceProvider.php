@@ -41,7 +41,12 @@ class AuthServiceProvider extends ServiceProvider
             if (empty($user)) {
                 return null;
             }
-            return new GenericUser(['id' => 1, 'openid' => $user['openid'], 'accessToken' => $accessToken]);
+            return new GenericUser(
+                [
+                    'id' => $user['id'], 'openid' => $user['openid'], 'accessToken' => $accessToken, 'headImg' => $user['headimgurl'],
+                    'nickName' => $user['nickname']
+                ]
+            );
         });
     }
 }
