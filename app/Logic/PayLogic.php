@@ -78,7 +78,8 @@ class PayLogic extends BaseLogic
                 return '';
             }
             $payOrderNo = $data->out_trade_no;
-            $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'num'])->where(['outTradeNo' => $payOrderNo])->first();
+            $payOrder = PayOrderModel::query()->select(['contentJson', 'uid', 'num', 'price'])->where(['outTradeNo' => $payOrderNo])
+                ->first();
             $content = json_decode($payOrder->contentJson, true);
             $packageId = $content['packageId'];
             $type = $content['type'];
@@ -88,11 +89,11 @@ class PayLogic extends BaseLogic
                 try {
                     PackageModel::query()->where(['type' => $type])->decrement('personLimit', 1);
                 } catch (Exception $e) {
-                    CommonUtil::throwException(100, '此次参团已');
+                    CommonUtil::throwException(100, '此次参团已已结束');
                 }
             }
             // 更新支付状态
-            OrderModel::query()->insert([
+            $order = [
                 'uri' => CommonUtil::createUri(),
                 'packageId' => $packageId,
                 'uid' => $payOrder->uid,
@@ -105,7 +106,10 @@ class PayLogic extends BaseLogic
                 'payOrderNo' => $payOrderNo,
                 'paidTime' => $nowTime,
                 'createTime' => $nowTime
-            ]);
+            ];
+            Log::info('orderInfo', $order);
+            OrderModel::query()->insert($order);
+            PayOrderModel::query()->where([['outTradeNo' => $payOrderNo]])->update(['payStatus' => 1, 'paidTime' => $nowTime]);
         } catch (Exception $exception) {
             Log::info($exception->getCode() . $exception->getTraceAsString());
         }
