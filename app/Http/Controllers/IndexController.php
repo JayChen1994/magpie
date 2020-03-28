@@ -14,7 +14,17 @@ class IndexController extends Controller
     public function index(Request $request)
     {
         $packages = PackageModel::query()
-            ->where(['pid' => 0])
+            ->where(['pid' => 0, 'type' => 0])
+            ->get()
+            ->map(function ($v) {
+                return [
+                    'title' => $v['title'],
+                    'imgUrl' => $this->getImgUrl($v['imgUrl'])
+                ];
+            });
+
+        $service = PackageModel::query()
+            ->where(['pid' => 0, 'type' => 3])
             ->get()
             ->map(function ($v) {
                 return [
@@ -28,28 +38,85 @@ class IndexController extends Controller
                 $this->getImgUrl("banner-1.jpg"),
                 $this->getImgUrl("banner-2.jpg"),
             ],
-            "packages" => $packages
+            "packages" => $packages,
+            "service" => $service
+        ];
+    }
+
+    public function packages(Request $request)
+    {
+        return PackageModel::query()
+            ->where(['pid' => 0, 'type' => 0])
+            ->get()
+            ->map(function ($v) {
+                $v['imgUrl'] = $this->getImgUrl($v['imgUrl']);
+                $v['sub'] = PackageModel::query()->where(['pid' => $v['id']])->get()->map(function ($v) {
+                    $v['imgUrl'] = $this->getImgUrl($v['imgUrl']);
+                    return $v;
+                });
+                return $v;
+            });
+    }
+
+    public function addPackage(Request $request)
+    {
+        $user = Auth::user();
+        if (empty($user) || $this->isAdmin($user->openid)) {
+            return response('Unauthorized.', 401);
+        }
+
+        $price = $request->input('price');  //分
+        $cleanNum = $request->input('cleanNum');
+        $personLimit = $request->input('personLimit');  //购买人数
+
+        $uri = 'package_sp_' . uniqid();
+
+        PackageModel::query()->insert([
+            'title' => '服务精选',
+            'uri' => $uri,
+            'pid' => 0,
+            'imgUrl' => 'cat0.jpg',
+            'price' => $price,
+            'cleanNum' => $cleanNum,
+            'type' => 2,
+            'unit' => '次',
+            'personLimit' => $personLimit
+        ]);
+
+        return ['uri' => $uri];
+    }
+
+    public function isLogin(Request $request)
+    {
+        $user = Auth::user();
+        if (empty($user)) {
+            return ['isLogin' => false];
+        }
+        return [
+            'isLogin' => true,
+            'isAdmin' => $this->isAdmin($user->openid)
         ];
     }
 
     public function getJsPackage(Request $request)
     {
-        $user = Auth::user();
-        if (empty($user)) {
-            return response('Unauthorized.', 401);
-        }
+        $appId = env('WX_APPID');
+        $appSecret = env('WX_SECRET');
+        $url = $request->input('url');
 
-        Log::info('get js package...access_token', $user->accessToken);
+        $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$appId&secret=$appSecret");
 
-        $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$user->accessToken}&type=jsapi");
+        Log::info('get js access_token...', $ret);
+
+        $ret = $this->getWebPage("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={$ret['access_token']}&type=jsapi");
 
         Log::info('get js package...', $ret);
 
         $jsapiTicket = $ret['ticket'];
 
         // 注意 URL 一定要动态获取，不能 hardcode.
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-        $url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        // $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        // $url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
         $timestamp = time();
         $nonceStr = $this->createNonceStr();
@@ -111,7 +178,7 @@ class IndexController extends Controller
             'domain' => env('COOKIE_DOMAIN'),
         ]);
 
-        return redirect(env('APP_URL'));
+        return redirect($state);
     }
 
     private function getImgUrl($file)
@@ -153,5 +220,11 @@ class IndexController extends Controller
             $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
         }
         return $str;
+    }
+
+    private function isAdmin($openid)
+    {
+        return in_array($openid,
+            ['o0d-m1TapYbRr8DIRGZhXMqDnLsI', 'o0d-m1cW-XhlpFheKNnMqomUI1c0', 'o0d-m1bcGPXLju7oLRjwnLyRi0FQ']);
     }
 }
