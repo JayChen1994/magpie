@@ -45,7 +45,7 @@ class OrderLogic extends BaseLogic
         foreach ($orders as $order) {
             $order->status = OrderModel::STATUS_DESC[$order->status];
             $order->payMoney = $order->payMoney / self::PERCENT;
-            $order->imgUrl = env('APP_URL') . '/static/imgs/' . $packages->get($order->packageId)->imgUrl;
+            $order->imgUrl = env('APP_URL') . '/static/media/' . $packages->get($order->packageId)->imgUrl;
         }
         return [
             'list' => $orders,
