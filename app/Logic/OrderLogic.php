@@ -9,6 +9,7 @@ use App\Utils\CommonUtil;
 use App\Utils\Singleton;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Yansongda\Pay\Log;
 
 class OrderLogic extends BaseLogic
 {
@@ -33,7 +34,7 @@ class OrderLogic extends BaseLogic
             'nickName' => $user->nickName
         ];
         $orders = OrderModel::query()->select(['id', 'uri', 'status', 'createTime', 'payMoney', 'surplusTimes', 'type', 'packageId'])
-            ->where(['uid' => $uid])->get();
+            ->where(['uid' => $uid])->orderBy('createTime', 'desc')->get();
         if ($orders->isEmpty()) {
             return [
                 'list' => [],
@@ -76,6 +77,7 @@ class OrderLogic extends BaseLogic
                 'createTime' => $nowTime,
             ]);
         } catch (Exception $e) {
+            Log::error('更新错误', ['msg' => $e->getMessage(), 'log' => $e->getTraceAsString()]);
             CommonUtil::throwException(100, '已经没有剩余的次数了');
         }
         return $ret;
