@@ -52,6 +52,7 @@ class IndexController extends Controller
                 $v['imgUrl'] = $this->getImgUrl($v['imgUrl']);
                 $v['sub'] = PackageModel::query()->where(['pid' => $v['id']])->get()->map(function ($v) {
                     $v['imgUrl'] = $this->getImgUrl($v['imgUrl']);
+                    $v['price'] = $v['price'] / 100;
                     return $v;
                 });
                 return $v;
@@ -65,7 +66,7 @@ class IndexController extends Controller
             return response('Unauthorized.', 401);
         }
 
-        $price = $request->input('price');  //分
+        $price = $request->input('price');
         $cleanNum = $request->input('cleanNum');
         $personLimit = $request->input('personLimit');  //购买人数
 
@@ -76,7 +77,7 @@ class IndexController extends Controller
             'uri' => $uri,
             'pid' => 0,
             'imgUrl' => 'cat0.jpg',
-            'price' => $price,
+            'price' => $price * 100,
             'cleanNum' => $cleanNum,
             'type' => 2,
             'unit' => '次',
