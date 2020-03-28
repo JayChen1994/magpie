@@ -34,12 +34,18 @@ class OrderLogic extends BaseLogic
         ];
         $orders = OrderModel::query()->select(['id', 'uri', 'status', 'createTime', 'payMoney', 'surplusTimes', 'type', 'packageId'])
             ->where(['uid' => $uid])->get();
+        if ($orders->isEmpty()) {
+            return [
+                'list' => [],
+                'userInfo' => $userInfo
+            ];
+        }
         $packageIds = $orders->pluck('packageId')->toArray();
         $packages = PackageModel::query()->select(['imgUrl', 'id'])->where(['id' => $packageIds])->get()->keyBy('id');
         foreach ($orders as $order) {
             $order->status = OrderModel::STATUS_DESC[$order->status];
             $order->payMoney = $order->payMoney / self::PERCENT;
-            $order->imgUrl = env('APP_URL') . '/imgs/' . $packages->get($order->packageId)->imgUrl;
+            $order->imgUrl = env('APP_URL') . '/static/imgs/' . $packages->get($order->packageId)->imgUrl;
         }
         return [
             'list' => $orders,
