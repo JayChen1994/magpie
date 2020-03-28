@@ -39,7 +39,17 @@ class IndexController extends Controller
                 $this->getImgUrl("banner-2.jpg"),
             ],
             "packages" => $packages,
-            "service" => $service
+            "service" => $service,
+            "intro" => [
+                [
+                    'title'=>'公司简介1',
+                    'uri'=>'https://www.baidu.com'
+                ],
+                [
+                    'title'=>'公司简介2',
+                    'uri'=>'https://www.qq.com'
+                ]
+            ]
         ];
     }
 
