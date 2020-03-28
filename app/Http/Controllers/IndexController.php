@@ -183,7 +183,7 @@ class IndexController extends Controller
 
     private function getImgUrl($file)
     {
-        return env('APP_URL') . '/imgs/' . $file;
+        return env('APP_URL') . '/static/imgs/' . $file;
     }
 
     private function getWebPage($url)
