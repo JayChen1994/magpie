@@ -15,17 +15,15 @@ class PackageModel extends Model
     public $connection = 'magpie';
 
     const COLUMN = ['id', 'uri', 'pid', 'title', 'imgUrl', 'price', 'type', 'cleanNum', 'content', 'unit', 'detailImgs'];
-
-    const TYPE_HAS_TIME = 1; // 有使用次数的套餐
-    const TYPE_NO_TIME = 0; // 没有使用次数的套餐
+    
 
     public function getByUri($uri)
     {
         $package = PackageModel::query()->select(self::COLUMN)
             ->where('uri', $uri)->first();
-        $package->imgUrl = env('APP_URL') . '/imgs/' . $package->imgUrl;
+        $package->imgUrl = env('APP_URL') . '/static/imgs/' . $package->imgUrl;
         $package->detailImgs = array_map(function ($img) {
-            return env('APP_URL') . '/imgs/' . $img;
+            return env('APP_URL') . '/static/imgs/' . $img;
         }, json_decode($package->detailImgs, true));
         $package->price = $package->price / 100;
         return $package;
