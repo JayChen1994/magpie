@@ -29,7 +29,8 @@ class IndexController extends Controller
             ->map(function ($v) {
                 return [
                     'title' => $v['title'],
-                    'imgUrl' => $this->getImgUrl($v['imgUrl'])
+                    'imgUrl' => $this->getImgUrl($v['imgUrl']),
+                    'uri' => $v['uri']
                 ];
             });
 
@@ -42,12 +43,12 @@ class IndexController extends Controller
             "service" => $service,
             "intro" => [
                 [
-                    'title'=>'公司简介1',
-                    'uri'=>'https://www.baidu.com'
+                    'title' => '公司简介1',
+                    'uri' => 'https://www.baidu.com'
                 ],
                 [
-                    'title'=>'公司简介2',
-                    'uri'=>'https://www.qq.com'
+                    'title' => '公司简介2',
+                    'uri' => 'https://www.qq.com'
                 ]
             ]
         ];
