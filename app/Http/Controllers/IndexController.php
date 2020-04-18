@@ -44,11 +44,11 @@ class IndexController extends Controller
             "intro" => [
                 [
                     'title' => '公司简介1',
-                    'uri' => 'https://www.baidu.com'
+                    'uri' => $this->getImgUrl("bottom-1.jpg")
                 ],
                 [
                     'title' => '公司简介2',
-                    'uri' => 'https://www.qq.com'
+                    'uri' => $this->getImgUrl("bottom-2.jpg")
                 ]
             ]
         ];
