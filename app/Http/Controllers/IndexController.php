@@ -237,6 +237,11 @@ class IndexController extends Controller
     private function isAdmin($openid)
     {
         return in_array($openid,
-            ['o0d-m1TapYbRr8DIRGZhXMqDnLsI', 'o0d-m1cW-XhlpFheKNnMqomUI1c0', 'o0d-m1bcGPXLju7oLRjwnLyRi0FQ']);
+            [
+                'o0d-m1TapYbRr8DIRGZhXMqDnLsI',
+                'o0d-m1cW-XhlpFheKNnMqomUI1c0',
+                'o0d-m1bcGPXLju7oLRjwnLyRi0FQ',
+                'o0d-m1cAXK6Lhs2oKx039jUYYFqE'
+            ]);
     }
 }
