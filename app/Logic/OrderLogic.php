@@ -8,6 +8,7 @@ use App\Models\UseLogModel;
 use App\Utils\CommonUtil;
 use App\Utils\Singleton;
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yansongda\Pay\Log;
 
@@ -69,11 +70,14 @@ class OrderLogic extends BaseLogic
         $uid = $user->id;
         $ret = 0;
         $nowTime = time();
+        $packageId = OrderModel::query()->where(['id' => $orderId])->value('packageId');
+        $title = PackageModel::query()->where(['id' => $packageId])->value('title');
         try {
             $ret = OrderModel::query()->where(['id' => $orderId, 'uid' => $uid])->decrement('surplusTimes', 1);
             UseLogModel::query()->insert([
                 'uid' => $uid,
                 'orderId' => $orderId,
+                'packageTitle' => $title,
                 'createTime' => $nowTime,
             ]);
         } catch (Exception $e) {
@@ -87,19 +91,22 @@ class OrderLogic extends BaseLogic
     {
         $user = Auth::user();
         $uid = $user->id;
-        if (!in_array($uid, [1])) {
+        if (!in_array($uid, [1, 2, 3, 4, 5, 6])) {
             CommonUtil::throwException(100, '你没有该权限');
         }
         $logs = UseLogModel::query()->where('createTime', '>=' , strtotime(date('Y-m-d', strtotime('-7 days'))))
+            ->orderBy('createTime', 'desc')
             ->get();
         $orderIds = $logs->pluck('orderId')->toArray();
-        $orders = OrderModel::query()->where(['id' => $orderIds])->select(['id', 'addressJson'])->get();
+        $orders = OrderModel::query()->whereIn('id', $orderIds)->select(['id', 'addressJson'])->get();
         $orderKeyBy = $orders->keyBy('id');
         $data = [];
         foreach ($logs as $log) {
             $data[] = [
-                'applyTime' => $log->createTime,
-                'addressInfo' => json_decode($orderKeyBy->get($log->orderId)->addressJson, true),
+                'title' => $log->packageTitle,
+                'applyTime' => Carbon::createFromTimestamp($log->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s'),
+                'addressInfo' => isset($orderKeyBy->get($log->orderId)->addressJson) ?
+                    json_decode($orderKeyBy->get($log->orderId)->addressJson, true) : []
             ];
         }
         return $data;
