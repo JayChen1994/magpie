@@ -73,7 +73,7 @@ class IndexController extends Controller
     public function addPackage(Request $request)
     {
         $user = Auth::user();
-        if (empty($user) || $this->isAdmin($user->openid)) {
+        if (empty($user) || !$this->isAdmin($user->openid)) {
             return response('Unauthorized.', 401);
         }
 
