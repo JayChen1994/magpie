@@ -81,13 +81,14 @@ class IndexController extends Controller
         $cleanNum = $request->input('cleanNum');
         $personLimit = $request->input('personLimit');  //购买人数
 
-        if (empty($price) || empty($cleanNum) || empty($personLimit)){
+        if (empty($price) || empty($cleanNum) || empty($personLimit)) {
             return [
                 'errorMsg' => '缺少参数',
             ];
         }
 
         $uri = 'package_sp_' . uniqid();
+        $detailImgs = ['cat0-1.jpg', 'cat0-2.jpg', 'cat0-3.jpg', 'cat0-4.jpg'];
 
         PackageModel::query()->insert([
             'title' => '服务精选',
@@ -98,7 +99,8 @@ class IndexController extends Controller
             'cleanNum' => $cleanNum,
             'type' => 2,
             'unit' => '次',
-            'personLimit' => $personLimit
+            'personLimit' => $personLimit,
+            'detailImgs' => json_encode($detailImgs, true)
         ]);
 
         return ['uri' => $uri];
