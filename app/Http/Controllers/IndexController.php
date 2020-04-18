@@ -81,6 +81,12 @@ class IndexController extends Controller
         $cleanNum = $request->input('cleanNum');
         $personLimit = $request->input('personLimit');  //购买人数
 
+        if (empty($price) || empty($cleanNum) || empty($personLimit)){
+            return [
+                'errorMsg' => '缺少参数',
+            ];
+        }
+
         $uri = 'package_sp_' . uniqid();
 
         PackageModel::query()->insert([
