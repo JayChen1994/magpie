@@ -85,13 +85,13 @@ class PayLogic extends BaseLogic
             $type = $content['type'];
             $package = PackageModel::query()->where(['id' => $packageId])->first();
             // 拼团的
-            if ($type == 2) {
-                try {
-                    PackageModel::query()->where(['type' => $type])->decrement('personLimit', 1);
-                } catch (Exception $e) {
-                    CommonUtil::throwException(100, '此次参团已已结束');
-                }
-            }
+            // if ($type == 2) {
+            //     try {
+            //         PackageModel::query()->where(['type' => $type])->decrement('personLimit', 1);
+            //     } catch (Exception $e) {
+            //         CommonUtil::throwException(100, '此次参团已已结束');
+            //     }
+            // }
             // 更新支付状态
             $order = [
                 'uri' => CommonUtil::createUri(),
