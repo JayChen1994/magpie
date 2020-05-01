@@ -90,8 +90,9 @@ class OrderLogic extends BaseLogic
     public function adminUseLog()
     {
         $user = Auth::user();
-        $uid = $user->id;
-        if (!in_array($uid, [1, 2, 3, 4, 5, 6])) {
+        /** @var $isAdmin */
+        $isAdmin = $user->isAdmin;
+        if (!$isAdmin) {
             CommonUtil::throwException(100, '你没有该权限');
         }
         $logs = UseLogModel::query()->where('createTime', '>=' , strtotime(date('Y-m-d', strtotime('-7 days'))))
