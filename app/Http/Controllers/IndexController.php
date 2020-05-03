@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Logic\CookieLogic;
+use App\Models\AdminUserModel;
 use App\Models\PackageModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
@@ -244,12 +245,12 @@ class IndexController extends Controller
 
     private function isAdmin($openid)
     {
-        return in_array($openid,
-            [
-                'o0d-m1TapYbRr8DIRGZhXMqDnLsI',
-                'o0d-m1cW-XhlpFheKNnMqomUI1c0',
-                'o0d-m1bcGPXLju7oLRjwnLyRi0FQ',
-                'o0d-m1cAXK6Lhs2oKx039jUYYFqE'
-            ]);
+        $adminUser = AdminUserModel::query()->get();
+        foreach ($adminUser as $user) {
+            if ($user->openid == $openid) {
+                return true;
+            }
+        }
+        return false;
     }
 }
