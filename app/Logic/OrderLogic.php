@@ -59,7 +59,7 @@ class OrderLogic extends BaseLogic
     {
         $useLogs = UseLogModel::query()->where(['orderId' => $orderId])->get();
         foreach ($useLogs as $useLog) {
-            $useLog->createTime = date('Y-m-d H:i:s', $useLog->createTime);
+            $useLog->createTime = Carbon::createFromTimestamp($log->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s');
         }
         return $useLogs;
     }
@@ -107,9 +107,12 @@ class OrderLogic extends BaseLogic
                 'title' => $log->packageTitle,
                 'applyTime' => Carbon::createFromTimestamp($log->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s'),
                 'addressInfo' => isset($orderKeyBy->get($log->orderId)->addressJson) ?
-                    json_decode($orderKeyBy->get($log->orderId)->addressJson, true) : []
+                    json_decode($orderKeyBy->get($log->orderId)->addressJson, true) : [],
             ];
         }
-        return $data;
+        return [
+            'list' => $data,
+            'isAdmin' => $isAdmin
+        ];
     }
 }
