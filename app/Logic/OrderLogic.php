@@ -59,7 +59,7 @@ class OrderLogic extends BaseLogic
     {
         $useLogs = UseLogModel::query()->where(['orderId' => $orderId])->get();
         foreach ($useLogs as $useLog) {
-            $useLog->createTime = date('Y-m-d H:i:s', $useLog->createTime);
+            $useLog->createTime = Carbon::createFromTimestamp($log->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s');
         }
         return $useLogs;
     }
@@ -90,8 +90,9 @@ class OrderLogic extends BaseLogic
     public function adminUseLog()
     {
         $user = Auth::user();
-        $uid = $user->id;
-        if (!in_array($uid, [1, 2, 3, 4, 5, 6])) {
+        /** @var $isAdmin */
+        $isAdmin = $user->isAdmin;
+        if (!$isAdmin) {
             CommonUtil::throwException(100, '你没有该权限');
         }
         $logs = UseLogModel::query()->where('createTime', '>=' , strtotime(date('Y-m-d', strtotime('-7 days'))))
@@ -106,9 +107,12 @@ class OrderLogic extends BaseLogic
                 'title' => $log->packageTitle,
                 'applyTime' => Carbon::createFromTimestamp($log->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s'),
                 'addressInfo' => isset($orderKeyBy->get($log->orderId)->addressJson) ?
-                    json_decode($orderKeyBy->get($log->orderId)->addressJson, true) : []
+                    json_decode($orderKeyBy->get($log->orderId)->addressJson, true) : [],
             ];
         }
-        return $data;
+        return [
+            'list' => $data,
+            'isAdmin' => $isAdmin
+        ];
     }
 }

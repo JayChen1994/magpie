@@ -44,7 +44,7 @@ class AuthServiceProvider extends ServiceProvider
             return new GenericUser(
                 [
                     'id' => $user['id'], 'openid' => $user['openid'], 'accessToken' => $accessToken, 'headImg' => $user['headimgurl'],
-                    'nickName' => $user['nickname']
+                    'nickName' => $user['nickname'], 'isAdmin' => $user['isAdmin']
                 ]
             );
         });
