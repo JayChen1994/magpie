@@ -59,7 +59,7 @@ class OrderLogic extends BaseLogic
     {
         $useLogs = UseLogModel::query()->where(['orderId' => $orderId])->get();
         foreach ($useLogs as $useLog) {
-            $useLog->createTime = Carbon::createFromTimestamp($log->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s');
+            $useLog->createTime = Carbon::createFromTimestamp($useLog->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s');
         }
         return $useLogs;
     }
@@ -92,9 +92,7 @@ class OrderLogic extends BaseLogic
         $user = Auth::user();
         /** @var $isAdmin */
         $isAdmin = $user->isAdmin;
-        if (!$isAdmin) {
-            CommonUtil::throwException(100, '你没有该权限');
-        }
+
         $logs = UseLogModel::query()->where('createTime', '>=' , strtotime(date('Y-m-d', strtotime('-7 days'))))
             ->orderBy('createTime', 'desc')
             ->get();
