@@ -81,6 +81,7 @@ class IndexController extends Controller
         $price = $request->input('price');
         $cleanNum = $request->input('cleanNum');
         $personLimit = $request->input('personLimit');  //购买人数
+        $title = $request->input('packageName', '服务精选');
 
         if (empty($price) || empty($cleanNum) || empty($personLimit)) {
             return [
@@ -92,7 +93,7 @@ class IndexController extends Controller
         $detailImgs = ['cat0-1.jpg', 'cat0-2.jpg', 'cat0-3.jpg', 'cat0-4.jpg'];
 
         PackageModel::query()->insert([
-            'title' => '服务精选',
+            'title' => $title,
             'uri' => $uri,
             'pid' => 0,
             'imgUrl' => 'cat0.jpg',
