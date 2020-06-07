@@ -21,4 +21,9 @@ class OrderModel extends Model
     const STATUS_DESC = [
         self::STATUS_PAID => '订单已支付'
     ];
+
+    public function package()
+    {
+        return $this->hasOne(PackageModel::class, 'id');
+    }
 }

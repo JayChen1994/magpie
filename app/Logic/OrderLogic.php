@@ -113,4 +113,27 @@ class OrderLogic extends BaseLogic
             'isAdmin' => $isAdmin
         ];
     }
+
+    public function adminPaidList()
+    {
+        $user = Auth::user();
+        /** @var $isAdmin */
+        $isAdmin = $user->isAdmin;
+        $orders = OrderModel::with('package')->select(['id', 'addressJson', 'packageId'])
+            ->orderBy('createTime', 'desc')
+            ->get();
+        $data = [];
+        foreach ($orders as $order) {
+            $data[] = [
+                'title' => $order->package->title,
+                'applyTime' => Carbon::createFromTimestamp($order->createTime, 'Asia/Shanghai')->format('Y-m-d H:i:s'),
+                'addressInfo' => isset($order->addressJson) ?
+                    json_decode($order->addressJson, true) : [],
+            ];
+        }
+        return [
+            'list' => $data,
+            'isAdmin' => $isAdmin
+        ];
+    }
 }

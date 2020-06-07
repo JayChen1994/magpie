@@ -73,4 +73,9 @@ class OrderController extends Controller
     {
         return $this->orderLogic->adminUseLog();
     }
+
+    public function adminPaidList()
+    {
+        return $this->orderLogic->adminPaidList();
+    }
 }
