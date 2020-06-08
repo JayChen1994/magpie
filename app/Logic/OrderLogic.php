@@ -119,7 +119,7 @@ class OrderLogic extends BaseLogic
         $user = Auth::user();
         /** @var $isAdmin */
         $isAdmin = $user->isAdmin;
-        $orders = OrderModel::with('package')->select(['id', 'addressJson', 'packageId'])
+        $orders = OrderModel::with('package')->select(['id', 'addressJson', 'packageId', 'createTime'])
             ->orderBy('createTime', 'desc')
             ->get();
         $data = [];
